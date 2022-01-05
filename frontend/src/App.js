@@ -1,6 +1,6 @@
 import TaskProvider from "./contexts/TaskContext";
 import FolderProvider from "./contexts/FolderContext";
-import Main from './components/Main'
+import Main from "./components/Main";
 
 function App() {
   return (

@@ -11,7 +11,7 @@ const TaskProvider = ({ children }) => {
   const [filteredTasks, setFilteredTasks] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState("");
-  const { selectedFolder, selectFolder } = useFolders();
+  const { folders, selectedFolder, selectFolder } = useFolders();
 
   const fetchTasks = async () => {
     const { data } = await http.get("/tasks");
@@ -23,9 +23,6 @@ const TaskProvider = ({ children }) => {
       method: "post",
       url: "/tasks",
       data: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
     return response;
   };
@@ -40,9 +37,6 @@ const TaskProvider = ({ children }) => {
       method: "patch",
       url: `/tasks/${taskId}`,
       data: JSON.stringify({ completed }),
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
     return response;
   };
@@ -52,14 +46,10 @@ const TaskProvider = ({ children }) => {
       method: "patch",
       url: `/tasks/${taskId}`,
       data: JSON.stringify({ text }),
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
-    console.log(response);
-
     return response;
   };
+
   useEffect(() => {
     if (tasks.length > 0) {
       setFilteredTasks(
@@ -68,14 +58,24 @@ const TaskProvider = ({ children }) => {
     }
   }, [tasks]);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (selectedFolder) {
-      fetchTasks();
+      await fetchTasks();
       setFilteredTasks(
         tasks.filter((task) => task.folderId === selectedFolder.id)
       );
     }
   }, [selectedFolder]);
+
+  useEffect(() => {
+    if (!folders.find((folder) => folder.id == selectedFolder.id)) {
+      setIsEdit(false);
+    }
+
+    if (folders.length === 0) {
+      selectFolder("");
+    }
+  }, [folders]);
 
   const saveTaskToEdit = (task) => {
     setTaskToEdit(task);

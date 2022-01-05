@@ -4,7 +4,8 @@ import {
   Post,
   Body,
   Patch,
-  Param
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { FoldersService } from '../providers/folders.service';
 import { CreateFolderDTO } from '../dto/create-folder.dto';
@@ -32,5 +33,13 @@ export class FoldersController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateFolderDto: UpdateFolderDTO) {
     return this.foldersService.update(id, updateFolderDto);
+  }
+
+  @Delete(':id')
+  async deleteOne(@Param('id') id: string) {
+    let data = await this.foldersService.remove(id);
+    //delete all tasks attached
+    
+    return { message: 'Folder deleted', data };
   }
 }

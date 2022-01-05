@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import axios from "axios";
+import http from "../http.common";
 import { v4 } from "uuid";
 
 const FolderContext = createContext();
@@ -10,10 +10,23 @@ const FolderProvider = ({ children }) => {
   const [selectedFolder, setSelectedFolder] = useState("");
 
   const fetchFolders = async () => {
-    const { data } = await axios.get(`http://localhost:8000/folders`);
-    console.log(data);
+    const { data } = await http.get(`/folders`);
     setFolders(data);
-  }
+  };
+
+  const saveFolder = async (data) => {
+    const response = await http({
+      method: "post",
+      url: "/folders",
+      data: JSON.stringify(data),
+    });
+    return response;
+  };
+
+  const deleteFolder = async (folderId) => {
+    const response = await http.delete(`/folders/${folderId}`);
+    return response;
+  };
 
   useEffect(() => {
     fetchFolders();
@@ -24,17 +37,24 @@ const FolderProvider = ({ children }) => {
   };
 
   const createFolder = (folder) => {
+    const id = v4();
     setFolders([
       ...folders,
       {
-        id: v4(),
+        id,
         name: folder,
       },
     ]);
+    const data = {
+      id,
+      name: folder,
+    };
+    saveFolder(data);
   };
 
   const removeFolder = (folderId) => {
     setFolders(folders.filter((folder) => folder.id !== folderId));
+    deleteFolder(folderId);
   };
 
   return (
