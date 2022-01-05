@@ -10,6 +10,7 @@ const AddTask = () => {
   const handleClick = () => {
     if (task) {
       addTask(task, selectedFolder.id);
+      setTask("");
     }
   };
 

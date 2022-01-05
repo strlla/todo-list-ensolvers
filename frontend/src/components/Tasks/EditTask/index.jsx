@@ -5,6 +5,13 @@ const EditTask = () => {
   const [text, setText] = useState("");
   const { isEdit, taskToEdit, toggleEdit, editTask } = useTasks();
 
+  const handleClick = () => {
+    if (text) {
+      editTask(text);
+      setText("");
+    }
+  };
+
   return (
     isEdit && (
       <section className="edittask-wrapper">
@@ -19,7 +26,7 @@ const EditTask = () => {
             onChange={(e) => setText(e.target.value)}
             placeholder="New name"
           />
-          <button onClick={() => editTask(text)}>Save</button>
+          <button onClick={handleClick}>Save</button>
         </div>
       </section>
     )
