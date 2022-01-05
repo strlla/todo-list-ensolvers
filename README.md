@@ -6,7 +6,11 @@ Responsive TO-DO web application developed by *Estrella Portocarrero*
 - [MySQL](https://www.mysql.com/) (^8.0.27) for the database
 
 ## Usage
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Run: 
+
+    bash init.sh
+
+Open this [link](https://61d5bf57fe1fba7853062721--dazzling-montalcini-4992f7.netlify.app/) to view the app in your browser.
 
 ## DEMO
 ![Demo](demo.gif)
