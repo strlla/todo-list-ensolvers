@@ -6,13 +6,17 @@ const CreateFolder = () => {
   const { createFolder } = useFolders();
 
   const handleClick = () => {
-      if(name){
-        createFolder(name)
-      }
-  }
+    if (name) {
+      createFolder(name);
+    }
+  };
   return (
     <div className="createfolder-wrapper">
-      <input type="text" onChange={(e) => setName(e.target.value)} />
+      <input
+        type="text"
+        onChange={(e) => setName(e.target.value)}
+        placeholder="New folder"
+      />
       <button onClick={handleClick}>Create folder</button>
     </div>
   );

@@ -10,13 +10,14 @@ const EditTask = () => {
       <section className="edittask-wrapper">
         <div className="edittask-header">
           <h3>{`Editing task "${taskToEdit.text}"`}</h3>
-          <span onClick={(e)=>toggleEdit()}>X</span>
+          <span onClick={(e) => toggleEdit()}>X</span>
         </div>
         <div className="edittask-bottom">
           <input
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
+            placeholder="New name"
           />
           <button onClick={() => editTask(text)}>Save</button>
         </div>
