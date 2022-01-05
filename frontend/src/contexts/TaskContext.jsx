@@ -68,7 +68,7 @@ const TaskProvider = ({ children }) => {
   }, [selectedFolder]);
 
   useEffect(() => {
-    if (!folders.find((folder) => folder.id == selectedFolder.id)) {
+    if (!folders.find((folder) => folder.id === selectedFolder.id)) {
       setIsEdit(false);
     }
 
