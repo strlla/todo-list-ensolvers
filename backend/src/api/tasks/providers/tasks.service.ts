@@ -20,10 +20,6 @@ export class TasksService {
     return this.taskRepository.find();
   }
 
-  findOne(id: string) {
-    return this.taskRepository.findOne(id);
-  }
-
   async updateStatus(id: string, updateTaskStatusDTO: UpdateTaskStatusDTO) {
     return await this.taskRepository.update(id, updateTaskStatusDTO);
   }

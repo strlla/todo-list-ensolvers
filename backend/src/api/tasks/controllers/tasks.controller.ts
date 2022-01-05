@@ -32,11 +32,6 @@ export class TasksController {
     return this.tasksService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tasksService.findOne(id);
-  }
-
   @Patch(':id')
   async updateStatus(
     @Param('id') id: string,
