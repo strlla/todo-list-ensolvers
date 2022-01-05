@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Task } from '../entities/task.entity';
-import { CreateTaskDTO } from '../dto/create-task.dto';
-import { UpdateTaskDTO } from '../dto/update-task.dto';
+import { CreateTaskDTO, UpdateTaskDTO, UpdateTaskStatusDTO } from '../dto';
 
 @Injectable()
 export class TasksService {
@@ -13,11 +12,8 @@ export class TasksService {
   ) {}
 
   async createOne(createTaskDTO: CreateTaskDTO) {
-    console.log(createTaskDTO)
     const post = this.taskRepository.create(createTaskDTO);
-    console.log("post")
-    console.log(post)
-    return await this.taskRepository.save(post)
+    return await this.taskRepository.save(post);
   }
 
   findAll(): Promise<Task[]> {
@@ -28,8 +24,12 @@ export class TasksService {
     return this.taskRepository.findOne(id);
   }
 
-  async update(id: string, updateTodoDTO: UpdateTaskDTO) {
-    return await this.taskRepository.update(id, updateTodoDTO);
+  async updateStatus(id: string, updateTaskStatusDTO: UpdateTaskStatusDTO) {
+    return await this.taskRepository.update(id, updateTaskStatusDTO);
+  }
+
+  async updateText(id: string, updateTaskDTO: UpdateTaskDTO) {
+    return await this.taskRepository.update(id, updateTaskDTO);
   }
 
   async remove(id: string) {

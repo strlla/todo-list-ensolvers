@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import axios from "axios";
 import { v4 } from "uuid";
 
 const FolderContext = createContext();
@@ -7,6 +8,16 @@ export const useFolders = () => useContext(FolderContext);
 const FolderProvider = ({ children }) => {
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState("");
+
+  const fetchFolders = async () => {
+    const { data } = await axios.get(`http://localhost:8000/folders`);
+    console.log(data);
+    setFolders(data);
+  }
+
+  useEffect(() => {
+    fetchFolders();
+  }, []);
 
   const selectFolder = (folder) => {
     setSelectedFolder(folder);

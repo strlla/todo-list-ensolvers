@@ -4,8 +4,7 @@ import {
   Post,
   Body,
   Patch,
-  Param,
-  Delete,
+  Param
 } from '@nestjs/common';
 import { FoldersService } from '../providers/folders.service';
 import { CreateFolderDTO } from '../dto/create-folder.dto';
@@ -18,11 +17,6 @@ export class FoldersController {
   @Post()
   create(@Body() createFolderDto: CreateFolderDTO) {
     return this.foldersService.create(createFolderDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.foldersService.remove(id);
   }
 
   @Get()

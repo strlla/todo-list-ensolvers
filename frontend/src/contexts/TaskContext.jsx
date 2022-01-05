@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { useFolders } from "./FolderContext";
+import http from "../http.common";
 import { v4 } from "uuid";
 
 const TaskContext = createContext();
@@ -12,13 +13,69 @@ const TaskProvider = ({ children }) => {
   const [taskToEdit, setTaskToEdit] = useState("");
   const { selectedFolder, selectFolder } = useFolders();
 
+  const fetchTasks = async () => {
+    const { data } = await http.get("/tasks");
+    setTasks(data);
+  };
+
+  const saveTask = async (data) => {
+    const response = await http({
+      method: "post",
+      url: "/tasks",
+      data: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  };
+
+  const deleteTask = async (taskId) => {
+    const response = await http.delete(`/tasks/${taskId}`);
+    return response;
+  };
+
+  const updateTaskStatus = async (taskId, completed) => {
+    const response = await http({
+      method: "patch",
+      url: `/tasks/${taskId}`,
+      data: JSON.stringify({ completed }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response;
+  };
+
+  const updateTaskText = async (taskId, text) => {
+    const response = await http({
+      method: "patch",
+      url: `/tasks/${taskId}`,
+      data: JSON.stringify({ text }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(response);
+
+    return response;
+  };
   useEffect(() => {
-    if (selectedFolder) {
+    if (tasks.length > 0) {
       setFilteredTasks(
         tasks.filter((task) => task.folderId === selectedFolder.id)
       );
     }
-  }, [selectedFolder, tasks]);
+  }, [tasks]);
+
+  useEffect(() => {
+    if (selectedFolder) {
+      fetchTasks();
+      setFilteredTasks(
+        tasks.filter((task) => task.folderId === selectedFolder.id)
+      );
+    }
+  }, [selectedFolder]);
 
   const saveTaskToEdit = (task) => {
     setTaskToEdit(task);
@@ -39,23 +96,32 @@ const TaskProvider = ({ children }) => {
     }
   };
 
-  const addTask = (task, folderId) => {
+  const addTask = (text, folderId) => {
+    const id = v4();
     setTasks([
       ...tasks,
       {
-        id: v4(),
-        text: task,
+        id,
+        text,
         completed: false,
         folderId,
       },
     ]);
+    const data = {
+      id,
+      text,
+      completed: false,
+      folderId,
+    };
+    saveTask(data);
   };
 
   const removeTask = (taskId) => {
     setTasks(tasks.filter((task) => task.id !== taskId));
     if (tasks.length === 0) {
-      // selectFolder("");
+      selectFolder("");
     }
+    deleteTask(taskId);
   };
 
   const changeStatus = (taskId) => {
@@ -64,6 +130,7 @@ const TaskProvider = ({ children }) => {
         task.id === taskId ? { ...task, completed: !task.completed } : task
       )
     );
+    updateTaskStatus(taskId, !tasks.find((t) => t.id === taskId).completed);
   };
 
   const editTask = (text) => {
@@ -73,6 +140,7 @@ const TaskProvider = ({ children }) => {
       )
     );
     setTaskToEdit({ ...taskToEdit, text });
+    updateTaskText(taskToEdit.id, text);
   };
 
   return (
